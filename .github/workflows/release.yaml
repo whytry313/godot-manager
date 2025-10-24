@@ -29,7 +29,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         env:
           NODE_OPTIONS: '--experimental-fetch' # if nodejs < 18
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          generate_release_notes: true
           name: GodotManager ${{ steps.vars.outputs.app_version }}
           tag_name: ${{ steps.vars.outputs.app_version }}
           files: |-
