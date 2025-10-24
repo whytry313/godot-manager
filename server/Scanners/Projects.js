@@ -159,7 +159,7 @@ class ProjectsManager {
 	getAddons(id) {
 		if (!this.#byID[ id ] || !fs.existsSync(this.#byID[ id ].path+"/addons")) { return null; }
 		const project = JSON.parse(JSON.stringify(this.#byID[ id ]));
-		const addons_path = path.join(project.path, "addons");
+		const addons_path = path.join(project.path_full, "addons");
 		const folders = fs.readdirSync(addons_path);
 		const addons = folders.map((folder) => {
 			const folderPath = path.join(addons_path, folder);
@@ -169,7 +169,7 @@ class ProjectsManager {
 			if (!addon.plugin) return null;
 			addon = addon.plugin;
 			addon.realPath = folderPath;
-			addon.path = folderPath.replace(project.path, "res:/");
+			addon.path = folderPath.replace(project.path_full, "res:/");
 			addon.enabled = project.plugins.indexOf(addon.path) > -1;
 			return addon;
 		}).filter(Boolean).sort((a, b) => a.enabled > b.enabled ? -1 : 0);
