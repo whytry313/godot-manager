@@ -1,0 +1,34 @@
+name: release
+
+on: 
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install npm deps
+        run: npm install
+      - name: Install npm dev
+        run: npm install --only=dev
+      - name: Create dist folder
+        run: mkdir dist
+      - name: Build Deb
+        run: npm run build
+      - name: Set outputs
+        id: vars
+        run: echo "app_version=$(cat package.json| grep version | grep -Eo '[0-9\.]+' | head -1)" >> $GITHUB_OUTPUT
+      - name: Use Go Action
+        uses: akkuman/gitea-release-action@v1
+        env:
+          NODE_OPTIONS: '--experimental-fetch' # if nodejs < 18
+        with:
+          name: GodotManager ${{ steps.vars.outputs.app_version }}
+          tag_name: ${{ steps.vars.outputs.app_version }}
+          files: |-
+            builds/**.deb
