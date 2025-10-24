@@ -19,6 +19,8 @@ jobs:
       - name: Create dist folder
         run: mkdir dist
       - name: Build Deb
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: npm run build
       - name: Set outputs
         id: vars
