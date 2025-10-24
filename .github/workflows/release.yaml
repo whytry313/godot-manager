@@ -26,7 +26,7 @@ jobs:
         id: vars
         run: echo "app_version=$(cat package.json| grep version | grep -Eo '[0-9\.]+' | head -1)" >> $GITHUB_OUTPUT
       - name: Use Go Action
-        uses: akkuman/gitea-release-action@v1
+        uses: softprops/action-gh-release@v2
         env:
           NODE_OPTIONS: '--experimental-fetch' # if nodejs < 18
         with:
