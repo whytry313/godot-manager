@@ -38,4 +38,4 @@ jobs:
           name: GodotManager ${{ steps.vars.outputs.app_version }}
           tag_name: ${{ steps.vars.outputs.app_version }}
           files: |-
-            builds/**.deb
+            builds/**/*.{deb,exe,AppImage,dmg,pkg}
