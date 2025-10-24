@@ -96,6 +96,7 @@
 			LocalStorage.listen("hideProjects", this.hideProjects);
 			document.querySelector("BODY").addEventListener("keydown", this.shiftHeld);
 			document.querySelector("BODY").addEventListener("keyup", this.unshiftHeld);
+			window.addEventListener("blur", this.unshiftHeld);
 		},
 		unmounted() {
 			document.querySelector("BODY").removeEventListener("keydown", this.shiftHeld);
