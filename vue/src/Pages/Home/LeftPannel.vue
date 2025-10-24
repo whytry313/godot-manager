@@ -30,7 +30,10 @@
 		name: "LeftPannel",
 		props: { programs: Array, selectedVersion: Object },
 		watch: {
-			$props() { this.sortProgram(); }
+			$props: {
+				handler() { this.sortProgram(); },
+				deep: true,
+			}
 		},
 		mounted() {
 			this.sortProgram();
