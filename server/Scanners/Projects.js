@@ -26,15 +26,16 @@ class ProjectsManager {
 		this.getProjectFilePath = this.getProjectFilePath.bind(this);
 	}
 
-	#parseProject(filePath) {
+	#parseProject(filePath, root) {
 		const data = parseCFG(filePath, ['input', 'importer_defaults']);
 		if (data && data.application) {
-			const dir = path.dirname(filePath)
+			const dir = path.dirname(filePath);
 			const project = {
 				name: "",
 				tags: [],
 				version: '',
-				path: dir,
+				path_full: dir,
+				path: dir.replace(root, "@"),
 				nbPlugins: 0,
 				plugins: [],
 				description: '',
@@ -115,12 +116,12 @@ class ProjectsManager {
 		this.#projectsAssets = {};
 	}
 
-	#scanFolder(folderPath, depth = 0) {
+	#scanFolder(folderPath, root, depth = 0) {
 		if (this.#folders[ folderPath ] || depth > this.#max_depth) return;
 
 		const inCurrentFolder = path.join(folderPath, "project.godot");
 		if (fs.existsSync(inCurrentFolder)) {
-			const project = this.#parseProject(inCurrentFolder);
+			const project = this.#parseProject(inCurrentFolder, root);
 			if (project) {
 				this.#folders[ folderPath ] = true;
 				project.id = "#" + this.#lastID;
@@ -139,7 +140,7 @@ class ProjectsManager {
 			if (this.#ignoreFolders.indexOf(dir) > -1) return;
 			var _dir = path.join(folderPath, dir);
 			if (fs.lstatSync(_dir).isDirectory()) {
-				this.#scanFolder(_dir, depth + 1);
+				this.#scanFolder(_dir, root, depth + 1);
 				this.#projects.sort((a,b) => a.lastModified > b.lastModified ? -1 : 0);
 			}
 		});
@@ -147,7 +148,7 @@ class ProjectsManager {
 
 	getProjectFilePath(project, url) {
 		if (this.#projectsAssets[ project ] && this.#projectsAssets[ project ].fileStack.indexOf(url) > -1) {
-			return path.join(this.#byID[ project ].path, url);
+			return path.join(this.#byID[ project ].path_full, url);
 		}
 		return null;
 	}
@@ -191,7 +192,7 @@ class ProjectsManager {
 			...[ "addons", ".git" ],
 			...(this.#settings.ignoreFolders || [])
 		]));
-		this.#paths.forEach(this.#scanFolder.bind(this));
+		this.#paths.forEach((f) => this.#scanFolder(f, f));
 		!dontEmit && electrolite.emit("updateProjects");
 	}
 }

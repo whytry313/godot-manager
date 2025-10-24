@@ -57,7 +57,8 @@ class ProgramsManager {
 				int_v: parseInt([ version[0], version[1] ].join('')),
 				build: version[2],
 				tag: version.join('.'),
-				path: execPath,
+				path_full: execPath,
+				path: execPath.replace(folderPath, "@"),
 				execName: execPath.split(/[\/\/]/).pop()
 			};
 			this.#lastID += 1;

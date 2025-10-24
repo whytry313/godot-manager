@@ -16,7 +16,7 @@ const runProj = async (program, project, inTerminal) => {
 		}
 	});
 	let msTimeout = 5000;
-	let args = [ program.path , project.project ];
+	let args = [ program.path_full , project.project ];
 	if (inTerminal) {
 		args = [ "x-terminal-emulator", "-e", ...args ];
 		msTimeout = 1000;

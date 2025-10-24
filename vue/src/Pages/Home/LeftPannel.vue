@@ -48,7 +48,7 @@
 				this.$emit("changeVersion", program ? { ...program } : null);
 			},
 			async onProgramFolder(program) {
-				window._API_.post("/openFolder", { filepath: program.path });
+				window._API_.post("/openFolder", { filepath: program.path_full });
 			}
 		}
 	}
