@@ -27,7 +27,8 @@ const injectVersion = (bigStrJSON, mainVersion, file) => {
 			},
 			'3': (json) => {
 				if (json['config_version']) {
-					json._v = [ mainVersion, json['config_version'] ].join('.');
+					json._v = [ mainVersion, parseInt(json['config_version']) + 2 ].join('.');
+					json.application = { 'config/name': json.config.name };
 				}
 				return json;
 			}
@@ -52,7 +53,7 @@ const parseFile = (filepath, ignoreHeaders = []) => {
 		if (bigStr.indexOf("PackedStringArray(") === 0) {
 			bigStr = bigStr.replace("PackedStringArray(", '[').replace(/\)$/, ']');
 			mainVersion = 4;
-		}else if (bigStr.indexOf("PoolStringArray(") === 0) {
+		} else if (bigStr.indexOf("PoolStringArray(") === 0) {
 			bigStr = bigStr.replace("PoolStringArray(", '[').replace(/\)$/, ']');
 			mainVersion = 3;
 		}
@@ -107,7 +108,12 @@ const parseFile = (filepath, ignoreHeaders = []) => {
 		else { config = { ...config, ...headerVariables }; }
 	}
 
-	return injectVersion(config, mainVersion, filepath);
+	if (!mainVersion) {
+		if (config.config && config.config.name) { mainVersion = 3; }
+		else if (config.application && config.application["config/name"]) { mainVersion = 4; }
+	}
+	const res = injectVersion(config, mainVersion, filepath);
+	return res;
 }
 
 module.exports = parseFile;
