@@ -157,7 +157,7 @@ class ProjectsManager {
 
 	get(id) { return id ? this.#byID[ id ] : { projects: this.#projects, nbAssets: this.#nbAssets }; }
 	getAddons(id) {
-		if (!this.#byID[ id ] || !fs.existsSync(this.#byID[ id ].path+"/addons")) { return null; }
+		if (!this.#byID[ id ] || !fs.existsSync(this.#byID[ id ].path_full+"/addons")) { return null; }
 		const project = JSON.parse(JSON.stringify(this.#byID[ id ]));
 		const addons_path = path.join(project.path_full, "addons");
 		const folders = fs.readdirSync(addons_path);
