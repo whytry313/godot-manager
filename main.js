@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const { protocol } = require("electron");
-const electrolite = require("./electrolite");
+const electrolite = require("electrolite");
 const isProd = process.env.NODE_ENV !== "dev";
 const API = require("./server/API/index.js");
 const Projects = require("./server/Scanners/Projects.js");

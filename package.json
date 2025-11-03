@@ -40,7 +40,10 @@
       }
     ],
     "linux": {
-      "target": [ "deb", "appImage" ],
+      "target": [
+        "deb",
+        "appImage"
+      ],
       "category": "Utility",
       "icon": "public/img/logo.png"
     },
@@ -53,6 +56,7 @@
     "en_US"
   ],
   "dependencies": {
+    "electrolite": "github:why-try313/electrolite",
     "node-fetch": "^2.7.0"
   }
 }

@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
+const electrolite = require("electrolite");
 const { spawnSync } = require("child_process");
-const electrolite = require("../../electrolite/index.js");
 const ext = require("./utils/getOSExtension.js")();
 
 class ProgramsManager {

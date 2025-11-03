@@ -1,8 +1,8 @@
 const fs            = require("fs");
 const path          = require("path");
+const electrolite   = require("electrolite");
 const config        = require("../config.js");
 const parseCFG      = require("./utils/parser.cfg.js");
-const electrolite   = require("../../electrolite/index.js");
 let toggle = false;
 
 class ProjectsManager {
