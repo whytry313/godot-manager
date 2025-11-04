@@ -28,7 +28,10 @@ const injectVersion = (bigStrJSON, mainVersion, file) => {
 			'3': (json) => {
 				if (json['config_version']) {
 					json._v = [ mainVersion, parseInt(json['config_version']) + 2 ].join('.');
-					json.application = { 'config/name': json.config.name };
+					let name = json.config && json.config.name;
+					if (!name) { name = json.application && json.application.name; }
+					if (!name) { name = json.application && json.application['config/name']; }
+					json.application = { 'config/name': name };
 				}
 				return json;
 			}
