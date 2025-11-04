@@ -19,7 +19,7 @@
 					<i class="fas fa-terminal"></i>
 				</span>
 			</p>
-			<p v-if="project.description" style="margin: 0px; opacity: 0.7; white-space: nowrap; text-overflow: ellipsis;">
+			<p v-if="project.description" style="margin: 0px; opacity: 0.7; text-overflow: ellipsis; display: -webkit-box; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
 				{{ project.description }}
 			</p>
 			<div class="folder isPath">
