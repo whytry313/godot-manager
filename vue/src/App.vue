@@ -66,7 +66,7 @@
 			openModal(modalName) { this.modal = modalName; },
 			updateVar(prop, value) { this[ prop ] = value; },
 			updateMaxModalHeight() { this.maxHeight = (document.querySelector("BODY").offsetHeight - 120) + "px"; },
-			async getProjects() { const allprojects = await window._API_.get("/projects"); this.projects = allprojects.projects; this.nbAssets = allprojects.nbAssets; },
+			async getProjects() { const allprojects = await window._API_.get("/projects"); this.projects = allprojects.projects; this.nbAssets = allprojects.nbAssets; console.log(this.projects); },
 			async getPrograms() { this.programs = await window._API_.get("/programs"); },
 			setDarkMode(toggle) { document.querySelector("BODY").classList[ toggle ? "add" : "remove" ]("dark"); },
 			hideProjects(toggle) { document.querySelector("BODY").classList[ toggle ? "add" : "remove" ]("hideProjects"); },

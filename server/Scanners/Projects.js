@@ -1,4 +1,5 @@
 const fs            = require("fs");
+const du            = require("du");
 const path          = require("path");
 const electrolite   = require("electrolite");
 const config        = require("../config.js");
@@ -23,6 +24,7 @@ class ProjectsManager {
 		this.scan = this.scan.bind(this);
 		this.hasIcon = this.hasIcon.bind(this);
 		this.getPaths = this.getPaths.bind(this);
+		this.getFoldersSizes = this.getFoldersSizes.bind(this);
 		this.getProjectFilePath = this.getProjectFilePath.bind(this);
 	}
 
@@ -40,6 +42,7 @@ class ProjectsManager {
 				plugins: [],
 				description: '',
 				lastModified: 0,
+				size: { folder: -1, godot: -1, addons: -1 },
 				project: filePath,
 			};
 			project.name = data.application['config/name'];
@@ -50,6 +53,7 @@ class ProjectsManager {
 			project.main_v = data.main_v || '';
 			project.int_v  = data.int_v  || 0;
 			project.lastModified = fs.lstatSync(filePath).mtime;
+
 			// project.version = data.application["config/features"] && data.application["config/features"][0] || '';
 			if (data.application["config/icon"]) {
 				const icon = path.join(dir, data.application["config/icon"].replace(/^res:\/\//, ''));
@@ -143,6 +147,30 @@ class ProjectsManager {
 				this.#scanFolder(_dir, root, depth + 1);
 				this.#projects.sort((a,b) => a.lastModified > b.lastModified ? -1 : 0);
 			}
+		});
+	}
+
+	async getFoldersSizes() {
+		const proms = [];
+		const folder_path = {
+			folder: "",
+			godot: ".godot",
+			addons: "addons"
+		};
+
+		this.#projects.forEach((project) => {
+			Object.keys(folder_path).forEach((subFolderKey) => {
+				const dir = path.join(project.path_full, folder_path[ subFolderKey ]);
+				if (fs.existsSync(dir)) {
+					proms.push(du(dir).then((size) => {
+						project.size[ subFolderKey ] = size;
+					}));
+				}
+			})
+		});
+
+		Promise.all(proms).then(() => {
+			electrolite.emit("updateProjects");
 		});
 	}
 

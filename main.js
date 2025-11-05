@@ -32,16 +32,6 @@ const init = async () => {
 		raw: { frame: false, transparent:true }
 	});
 
-
-	win.on("close", () => win.window.close());
-	win.on("minimize", () => win.window.minimize());
-	win.on("maximize", () => win.window.isMaximized() ? win.window.unmaximize() : win.window.maximize());
-
-
-	Projects.scan();
-	Programs.scan();
-
-
 	protocol.interceptFileProtocol("icon", (request, callback) => {
 		const url = request.url.replace("icon://", '').replace(/\/$/, "");
 		return callback({ path: Projects.hasIcon(url) ? url : null });
@@ -54,6 +44,19 @@ const init = async () => {
 		const filepath = decodeURI(url.join(":"));
 		return callback({ path: Projects.getProjectFilePath(project, filepath) });
 	});
+
+	win.window.once("ready-to-show", () => {
+		Projects.getFoldersSizes();
+	});
+	win.on("close", () => win.window.close());
+	win.on("minimize", () => win.window.minimize());
+	win.on("maximize", () => win.window.isMaximized() ? win.window.unmaximize() : win.window.maximize());
+
+
+	Projects.scan();
+	Programs.scan();
+
+
 
 }
 

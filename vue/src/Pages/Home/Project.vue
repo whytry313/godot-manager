@@ -18,8 +18,11 @@
 				<span class="info-bubble terminal" title="Open in terminal" @click.stop.prevent="() => { $emit('openInTerminal', project); }">
 					<i class="fas fa-terminal"></i>
 				</span>
+				<div class="sizes" v-if="project.size && project.size.folder > -1" :title="getSizes(project)">
+					{{ size(project.size.folder) }}
+				</div>
 			</p>
-			<p v-if="project.description" style="margin: 0px; opacity: 0.7; text-overflow: ellipsis; display: -webkit-box; overflow: hidden; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+			<p v-if="project.description" class="description-text">
 				{{ project.description }}
 			</p>
 			<div class="folder isPath">
@@ -27,21 +30,38 @@
 			</div>
 		</div>
 		<div class="project-info">
-			<div class="btn info-bubble openAnyway" v-if="project.isUpgradable">Open with {{ selectedVersion.versionTag }}</div>
 			<div class="info-bubble">{{ project.version }}</div>
+			<div class="btn info-bubble openAnyway" v-if="project.isUpgradable">Open with {{ selectedVersion.versionTag }}</div>
 		</div>
 	</div>
 </template>
 
 <script>
+	import toHuman from "../../Utils/humanFileSize.js";
 	export default {
 		name: "Project",
 		props: { classes: Object, project: Object, selectedVersion: Object },
+		computed: {
+		},
+		methods: {
+			getSizes(project) {
+				const data = [];
+				if (project.size.addons && project.size.addons > 0) {
+					data.push("Addons: " + this.size(project.size.addons))
+				}
+				if (project.size.godot && project.size.godot > 0) {
+					data.push(".godot: " + this.size(project.size.godot))
+				}
+				return data.join(" • ");
+			},
+			size(size) {
+				return toHuman(size);
+			},
+		},
 	}
 </script>
 
 <style scoped>
-
 	.project {
 		display: flex;
 		cursor: pointer;
@@ -90,6 +110,7 @@
 	.project .project-info {
 		display: inline-block;
 		padding: 0 12px;
+		text-align: right;
 	}
 	.project .projectName {
 		vertical-align: middle;
@@ -102,6 +123,15 @@
 		background-color: #e43030;
 		color: #FFF;
 	}
+	.project .description-text {
+		margin: 0px;
+		opacity: 0.7;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		overflow: hidden;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
 	.project .info-bubble.terminal {
 		background: var(--accent-copy);
 		display: none;
@@ -110,4 +140,19 @@
 	.shiftHeld .project .info-bubble.terminal {
 		display: inline;
 	}
+	.project .sizes {
+		display: inline;
+		/*display: block;*/
+		/*color: var(--accent);*/
+		font-weight: bold;
+		opacity: 0.7;
+		margin-left: 7px;
+		margin-top: 5px;
+		vertical-align: middle;
+	}
+	.project .sizes .addons-size, .project .sizes .godot-size {
+		margin-left: 4px;
+	}
+	.project .sizes .addons-size { color: darkorange; }
+	.project .sizes .godot-size { opacity: 0.5; }
 </style>
