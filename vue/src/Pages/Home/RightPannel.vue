@@ -94,7 +94,7 @@
 				if (e.shiftKey && !inTerminal) { return this.onProgramFolder(project); }
 				if (!this.selectedVersion) return;
 				const isSameVersion = this.selectedVersion && this.selectedVersion.versionTag === project.version;
-				if (isSameVersion || evt.target.classList.contains("openAnyway")) {
+				if (isSameVersion || e.target.classList.contains("openAnyway")) {
 					window._API_.post('/openProject', {
 						project: project.id,
 						program: this.selectedVersion.id,
