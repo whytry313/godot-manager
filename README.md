@@ -25,7 +25,7 @@ Features include:
 <br/>
 
 ## Notes
-- **/!\ Important** About programs: Programs folders should only contain godot programs as version detection is done via CLI with `./godot_executable.x64 --version`
+- **⚠️ Important** About programs: Programs folders should only contain godot programs as version detection is done via CLI with `./godot_executable.x64 --version`
 - About this repo: The repo uses a specific branch for `release`, fixes will be pushed into `master` until there's a fair amount of fixes to bump versions and create a build.
-  If you need the lastest fixes, clone this repo, run `npm i` in the folder and `npm run buil` to create your builds in your `/build` folder
+  If you need the lastest fixes, clone this repo, run `npm i` in the folder and `npm run build` to create your builds in your `/build` folder
 - About **Linux only**: This little tool was made for fun and shared because "why not?", as I don't currently own a Windows/Mac builds are made for my system but there's interest i'll create a VM to try to port it to those platforms
