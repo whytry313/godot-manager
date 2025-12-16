@@ -7,6 +7,10 @@ const Presets        = require("../Presets/index.js");
 const simplifier     = require("../Utils/releasesSimplifier.js");
 const { app, shell, dialog } = require("electron");
 
+function log() {
+	process.env.NODE_ENV === "dev" && console.log(...arguments);
+}
+
 const runProj = async (program, project, inTerminal) => {
 	const env = {};
 	Object.keys(process.env).forEach((key) => {
@@ -32,11 +36,13 @@ const overwriteVersion = (program, project) => {
 	if (hasVersion) {
 		const _v = `_v="${ program.versionTag }"`;
 		if (hasVersion[0] != _v) {
+			const backupFilePath = project.project + ".bk";
 			const newV = file.replace(/^_v="[^"]{1,}"/m, _v);
-			console.log(`Updated "${ project.project }" to ${ newV }`);
-			return console.log(newV);
+			if (!fs.existsSync(backupFilePath)) { fs.writeFileSync(backupFilePath, file); }
+			fs.writeFileSync(project.project, newV)
+			return console.log(`Updated "${ project.project }" to ${ newV }`);
 		}
-		return console.log("version match");
+		return log("version match");
 	} else {
 		const _v = `_v="${ program.versionTag }"`;
 		const newFile = file.replace("[application]", _v+"\n\n[application]");
