@@ -2,3 +2,4 @@ node_modules
 dist
 builds
 package-lock.json
+.env
