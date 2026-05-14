@@ -7,6 +7,8 @@ const Presets        = require("../Presets/index.js");
 const simplifier     = require("../Utils/releasesSimplifier.js");
 const { app, shell, dialog } = require("electron");
 
+let GLOBAL_ENV = {};
+
 function log() {
 	process.env.NODE_ENV === "dev" && console.log(...arguments);
 }
@@ -18,6 +20,14 @@ const runProj = async (program, project, inTerminal) => {
 			env[ key ] = process.env[ key ];
 		}
 	});
+
+	if (Object.keys(GLOBAL_ENV).length) {
+		Object.keys(GLOBAL_ENV).forEach((key) => {
+			env[ key ] = GLOBAL_ENV[ key ];
+		});
+		console.log(`Stringi with env ${ JSON.stringify(GLOBAL_ENV, null, 4) }`);
+	}
+
 	let msTimeout = 5000;
 	let args = [ program.path_full , project.project ];
 	if (inTerminal) {
@@ -64,7 +74,23 @@ const cleanAndGetLastRelease = () => {
 	return null;
 };
 
+
+const setEnvironment = (electrolite) => {
+	const settings = electrolite.settings.get("projectsSettings");
+	const envData = {};
+	(settings.commandPrefix || "").split(/[\ \t\n]+/).map((argv) => {
+		const pairs = argv.split("=").filter(e => e.length);
+		if (pairs.length === 2) {
+			envData[ pairs[0] ] = pairs[ 1 ];
+		}
+	});
+	GLOBAL_ENV = envData;
+};
+
+
 module.exports = async (electrolite) => {
+
+	setEnvironment(electrolite);
 
 	// Projects
 	electrolite.get("/projects", () => Projects.get());
@@ -99,7 +125,11 @@ module.exports = async (electrolite) => {
 		let updatePrograms = false;
 		if (req.body.programs) { electrolite.settings.set("programsPaths", req.body.programs); updatePrograms = true; }
 		if (req.body.projects) { electrolite.settings.set("projectsPaths", req.body.projects); updateProjects = true; }
-		if (req.body.projectsSettings) { electrolite.settings.set("projectsSettings", req.body.projectsSettings); updateProjects = true; }
+		if (req.body.projectsSettings) {
+			electrolite.settings.set("projectsSettings", req.body.projectsSettings);
+			updateProjects = true;
+			setEnvironment(electrolite);
+		}
 
 		if (updateProjects) { Projects.scan(); }
 		if (updatePrograms) { Programs.scan(); }

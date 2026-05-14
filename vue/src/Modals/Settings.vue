@@ -1,6 +1,6 @@
 <template>
 	<div class="modal">
-		<div class="content" style="max-width: 400px; min-height: 120px;">
+		<div class="content" style="max-width: 480px; min-height: 120px;">
 			<div class="closeModal" @click="$emit('openModal', null)"></div>
 			<div class="mod-tabs">
 				<div class="mod-tab" :class="{ active: tab === 'General' }" @click="() => { tab = 'General'; }">General</div>
