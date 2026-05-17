@@ -76,7 +76,7 @@ const cleanAndGetLastRelease = () => {
 
 
 const setEnvironment = (electrolite) => {
-	const settings = electrolite.settings.get("projectsSettings");
+	const settings = electrolite.settings.get("projectsSettings") || {];
 	const envData = {};
 	(settings.commandPrefix || "").split(/[\ \t\n]+/).map((argv) => {
 		const pairs = argv.split("=").filter(e => e.length);
