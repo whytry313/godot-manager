@@ -66,9 +66,8 @@ const init = async () => {
 		return callback({ path: Projects.getProjectFilePath(project, filepath) });
 	});
 
-	win.window.once("ready-to-show", () => {
-		Projects.getFoldersSizes();
-	});
+    electrolite.get("/version", () => process.env.npm_package_version);
+	win.window.once("ready-to-show", () => { Projects.getFoldersSizes(); });
 	win.on("close", () => win.window.close());
 	win.on("minimize", () => win.window.minimize());
 	win.on("maximize", () => win.window.isMaximized() ? win.window.unmaximize() : win.window.maximize());
