@@ -7,7 +7,7 @@ const API = require("./server/API/index.js");
 const Projects = require("./server/Scanners/Projects.js");
 const Programs = require("./server/Scanners/Programs.js");
 let ELECTRON_SRC = path.join(__dirname, "./public/index.html");
-
+const Log = require("./server/Utils/Log.js");
 const init = async () => {
 
 
@@ -24,6 +24,8 @@ const init = async () => {
 	await electrolite.init();
 	Programs.scan();
 
+	Log("Arguments:", process.argv);
+
 	const fileInArguments = getFileInArguments();
 	if (fileInArguments) {
 		const project = Projects.getProgramFromGodotFile(fileInArguments);
@@ -35,9 +37,10 @@ const init = async () => {
 
 		const program = Programs.getByVersion(project.int_v);
 		if (program.path) {
+			Log(`Running project ${ fileInArguments }`)
 			return API.runProj(program, project, false);
 		}
-		console.log("Porgram version not found for project fileInArguments");
+		console.log("Program version not found for project fileInArguments");
 		return process.exit();
 	}
 
@@ -89,13 +92,16 @@ const getFileInArguments = () => {
 		if (stat.isSymbolicLink()) {
 			arg = fs.readlinkSync(arg);
 			stat = fs.lstatSync(arg);
+			Log("Symbolic link found in arguments:", _arg, " -> ", arg);
 		}
 		if (stat.isFile()) {
 			filePath = arg;
+			Log("File found in arguments:", arg);
 		}
 
 		if (filePath && filePath.indexOf("project.godot") > -1) {
 			file = arg;
+			Log("File set as main project file");
 		}
 	});
 	return file;
