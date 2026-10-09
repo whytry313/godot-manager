@@ -82,8 +82,19 @@ const init = async () => {
 
 const getFileInArguments = () => {
 	let file = null
-	Array.from(process.argv).forEach((arg) => {
-		if (arg.indexOf("project.godot") > -1) {
+	Array.from(process.argv).forEach((_arg) => {
+		let filePath = null;
+		let arg = _arg;
+		let stat = fs.lstatSync(arg);
+		if (stat.isSymbolicLink()) {
+			arg = fs.readlinkSync(arg);
+			stat = fs.lstatSync(arg);
+		}
+		if (stat.isFile()) {
+			filePath = arg;
+		}
+
+		if (filePath && filePath.indexOf("project.godot") > -1) {
 			file = arg;
 		}
 	});
@@ -93,7 +104,7 @@ const getFileInArguments = () => {
 
 const createDevServer = async () => {
 	const createViteServer = require('vite').createServer;
-	const port = 8152;
+	const port = 8152;	
 	ELECTRON_SRC = "http://localhost:"+port+"/";
 	const server = await createViteServer({
 		root: path.join(__dirname, "vue"),
