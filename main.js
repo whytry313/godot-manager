@@ -111,7 +111,7 @@ const getFileInArguments = () => {
 
 const createDevServer = async () => {
 	const createViteServer = require('vite').createServer;
-	const port = 8152;	
+	const port = 8152;
 	ELECTRON_SRC = "http://localhost:"+port+"/";
 	const server = await createViteServer({
 		root: path.join(__dirname, "vue"),

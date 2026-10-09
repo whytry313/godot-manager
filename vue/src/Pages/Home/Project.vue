@@ -155,4 +155,5 @@
 	}
 	.project .sizes .addons-size { color: darkorange; }
 	.project .sizes .godot-size { opacity: 0.5; }
+	.hidepaths-all .project .isPath, .hidepaths-projects .project .isPath { display: none; }
 </style>

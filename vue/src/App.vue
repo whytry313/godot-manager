@@ -1,5 +1,5 @@
 <template>
-	<div class="main" :class="{ disableTips: !!disableTips }">
+	<div class="main" :class="{ disableTips: !!disableTips, ['hidepaths-'+hidePaths]: true }">
 		<div id="header">
 			<div class="grab">
 				<p style="opacity: 0.3; margin: 0; margin-left: 15px;" class="tip">
@@ -19,7 +19,7 @@
 						:projects="projects"
 						:programs="programs"
 						:nbAssets="nbAssets"
-						:selectedProgram="selectedProgram" 
+						:selectedProgram="selectedProgram"
 						@openModal="openModal"
 						@updateVar="updateVar"
 					/>
@@ -51,6 +51,7 @@
 				accentColor: LocalStorage.get("accent") || "#bbd141",
 				disableTips: !!LocalStorage.get("disableTips"),
 				accentColorTransparent: (LocalStorage.get("accent") || "#bbd141") + "42",
+				hidePaths: (LocalStorage.get("hidePaths") || ""),
 				modal: null,
 				maxHeight: "80px",
 				projects: [],
@@ -73,7 +74,8 @@
 			shiftHeld(evt) { this.isShiftHeld = evt.shiftKey; },
 			unshiftHeld(evt) { this.isShiftHeld = false; },
 			setAccent(col) { this.accentColor = col; this.accentColorTransparent = col + '42'; },
-			toggleTips(toggle) { this.disableTips = toggle; }
+            toggleTips(toggle) { this.disableTips = toggle; },
+            toggleHidePaths() { this.hidePaths = (LocalStorage.get("hidePaths") || ""); },
 		},
 		async mounted() {
 			this.updateMaxModalHeight();
@@ -92,6 +94,7 @@
 			LocalStorage.listen("darkMode", this.setDarkMode);
 			LocalStorage.listen("accent", this.setAccent);
 			LocalStorage.listen("disableTips", this.toggleTips);
+			LocalStorage.listen("hidePaths", this.toggleHidePaths);
 			this.hideProjects(!!LocalStorage.get("hideProjects"));
 			LocalStorage.listen("hideProjects", this.hideProjects);
 			document.querySelector("BODY").addEventListener("keydown", this.shiftHeld);
@@ -103,6 +106,7 @@
 			document.querySelector("BODY").removeEventListener("keyup", this.unshiftHeld);
 			LocalStorage.unlisten("darkMode", this.setDarkMode);
 			LocalStorage.unlisten("accent", this.setAccent);
+			LocalStorage.unlisten("hidePaths", this.toggleHidePaths);
 			LocalStorage.unlisten("disableTips", this.toggleTips);
 			LocalStorage.unlisten("hideProjects", this.hideProjects);
 		}
@@ -276,7 +280,7 @@
 		transform: translate(-50%, -250%);
 	}
 
-	/************************** Header **************************/ 
+	/************************** Header **************************/
 	#header {
 		position: fixed;
 		top: 0; left: var(--menu-width); right: 0;

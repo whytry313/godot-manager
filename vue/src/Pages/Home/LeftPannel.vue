@@ -73,4 +73,5 @@
 		font-weight: bold;
 		color: var(--accent);
 	}
+	.hidepaths-all .program .isPath, .hidepaths-programs .program .isPath { display: none; }
 </style>
