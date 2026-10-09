@@ -30,8 +30,8 @@ const init = async () => {
 	if (fileInArguments) {
 		const project = Projects.getProgramFromGodotFile(fileInArguments);
 		if (!project || !project.int_v) {
-			console.log("Error: Project of version not found");
-			console.log(project);
+			Log("Error: Project of version not found");
+			Log(project);
 			process.exit();
 		}
 
@@ -40,7 +40,7 @@ const init = async () => {
 			Log(`Running project ${ fileInArguments }`)
 			return API.runProj(program, project, false);
 		}
-		console.log("Program version not found for project fileInArguments");
+		Log("Program version not found for project fileInArguments");
 		return process.exit();
 	}
 
@@ -88,6 +88,7 @@ const getFileInArguments = () => {
 	Array.from(process.argv).forEach((_arg) => {
 		let filePath = null;
 		let arg = _arg;
+		if (!fs.existsSync(arg)) return;
 		let stat = fs.lstatSync(arg);
 		if (stat.isSymbolicLink()) {
 			arg = fs.readlinkSync(arg);

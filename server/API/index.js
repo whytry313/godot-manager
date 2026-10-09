@@ -25,7 +25,7 @@ const runProj = async (program, project, inTerminal) => {
 		Object.keys(GLOBAL_ENV).forEach((key) => {
 			env[ key ] = GLOBAL_ENV[ key ];
 		});
-		console.log(`Stringi with env ${ JSON.stringify(GLOBAL_ENV, null, 4) }`);
+		console.log(`String with env ${ JSON.stringify(GLOBAL_ENV, null, 4) }`);
 	}
 
 	let msTimeout = 5000;
