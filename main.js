@@ -66,6 +66,7 @@ const init = async () => {
 		return callback({ path: Projects.getProjectFilePath(project, filepath) });
 	});
 
+
     electrolite.get("/version", () => process.env.npm_package_version);
 	win.window.once("ready-to-show", () => { Projects.getFoldersSizes(); });
 	win.on("close", () => win.window.close());
@@ -75,16 +76,15 @@ const init = async () => {
 
 	Projects.scan();
 	Programs.scan();
-
-
-
 }
 
 
 
 const getFileInArguments = () => {
-	let file = null
-	Array.from(process.argv).forEach((_arg) => {
+    let file = null
+    if (process.argv.indexOf("-h") > -1 || process.argv.indexOf("--help")) { return require("./cli-help.js")(); }
+
+    Array.from(process.argv).forEach((_arg) => {
 		let filePath = null;
 		let arg = _arg;
 		if (!fs.existsSync(arg)) return;
