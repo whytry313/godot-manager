@@ -8,6 +8,7 @@ const Projects = require("./server/Scanners/Projects.js");
 const Programs = require("./server/Scanners/Programs.js");
 let ELECTRON_SRC = path.join(__dirname, "./public/index.html");
 const Log = require("./server/Utils/Log.js");
+const displayCLIHelp = require("./server/Utils/cli-help.js");
 const init = async () => {
 
 
@@ -82,7 +83,7 @@ const init = async () => {
 
 const getFileInArguments = () => {
     let file = null
-    if (process.argv.indexOf("-h") > -1 || process.argv.indexOf("--help")) { return require("./cli-help.js")(); }
+    if (process.argv.indexOf("-h") > -1 || process.argv.indexOf("--help") > -1) { return displayCLIHelp(); }
 
     Array.from(process.argv).forEach((_arg) => {
 		let filePath = null;
