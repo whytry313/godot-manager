@@ -20,8 +20,26 @@ const init = async () => {
 	]);
 
 
-	await API(electrolite);
+	await API.init(electrolite);
 	await electrolite.init();
+	Programs.scan();
+
+	const fileInArguments = getFileInArguments();
+	if (fileInArguments) {
+		const project = Projects.getProgramFromGodotFile(fileInArguments);
+		if (!project || !project.int_v) {
+			console.log("Error: Project of version not found");
+			console.log(project);
+			process.exit();
+		}
+
+		const program = Programs.getByVersion(project.int_v);
+		if (program.path) {
+			return API.runProj(program, project, false);
+		}
+		console.log("Porgram version not found for project fileInArguments");
+		return process.exit();
+	}
 
 
 	if (!isProd) await createDevServer();
@@ -58,6 +76,18 @@ const init = async () => {
 
 
 
+}
+
+
+
+const getFileInArguments = () => {
+	let file = null
+	Array.from(process.argv).forEach((arg) => {
+		if (arg.indexOf("project.godot") > -1) {
+			file = arg;
+		}
+	});
+	return file;
 }
 
 

@@ -26,6 +26,7 @@ class ProjectsManager {
 		this.getPaths = this.getPaths.bind(this);
 		this.getFoldersSizes = this.getFoldersSizes.bind(this);
 		this.getProjectFilePath = this.getProjectFilePath.bind(this);
+		this.getProgramFromGodotFile = this.getProgramFromGodotFile.bind(this);
 	}
 
 	#parseProject(filePath, root) {
@@ -184,6 +185,7 @@ class ProjectsManager {
 	hasIcon(pathFile) { return this.#icons.indexOf(pathFile) > -1; }
 
 	get(id) { return id ? this.#byID[ id ] : { projects: this.#projects, nbAssets: this.#nbAssets }; }
+	getProgramFromGodotFile(godotFilePath) { return this.#parseProject(godotFilePath); }
 	getAddons(id) {
 		if (!this.#byID[ id ] || !fs.existsSync(this.#byID[ id ].path_full+"/addons")) { return null; }
 		const project = JSON.parse(JSON.stringify(this.#byID[ id ]));

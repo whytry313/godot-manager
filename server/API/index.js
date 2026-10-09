@@ -76,7 +76,7 @@ const cleanAndGetLastRelease = () => {
 
 
 const setEnvironment = (electrolite) => {
-	const settings = electrolite.settings.get("projectsSettings") || {];
+	const settings = electrolite.settings.get("projectsSettings") || [];
 	const envData = {};
 	(settings.commandPrefix || "").split(/[\ \t\n]+/).map((argv) => {
 		const pairs = argv.split("=").filter(e => e.length);
@@ -88,7 +88,7 @@ const setEnvironment = (electrolite) => {
 };
 
 
-module.exports = async (electrolite) => {
+const moduleInit = async (electrolite) => {
 
 	setEnvironment(electrolite);
 
@@ -217,4 +217,10 @@ module.exports = async (electrolite) => {
 		return files.length === 0;
 	});
 
+};
+
+
+module.exports = {
+	init: moduleInit,
+	runProj: runProj,
 };
