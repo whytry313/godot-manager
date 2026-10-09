@@ -1,6 +1,6 @@
 {
   "name": "godot-manager",
-  "version": "1.2.91",
+  "version": "1.3.00",
   "main": "main.js",
   "homepage": "https://github.com/why-try313/godot-manager",
   "scripts": {
@@ -15,7 +15,7 @@
   "description": "",
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.3",
-    "electron": "^35.1.4",
+    "electron": "^44.7.0",
     "electron-builder": "^26.0.12",
     "vite": "^6.2.5",
     "vue": "^3.5.13",

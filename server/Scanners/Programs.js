@@ -14,6 +14,7 @@ class ProgramsManager {
 	constructor() {
 		this.get = this.get.bind(this);
 		this.scan = this.scan.bind(this);
+		this.getByVersion = this.getByVersion.bind(this);
 	}
 
 	#resetScanData() {
@@ -68,6 +69,8 @@ class ProgramsManager {
 	}
 
 	get(id) { return id ? this.#byID[ id ] : this.#programs; }
+
+	getByVersion(versionInt) { return this.#programs.filter((prog) => { return prog.int_v === versionInt })[0]; }
 
 	scan() {
 		this.#resetScanData();

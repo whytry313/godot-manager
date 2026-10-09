@@ -9,7 +9,19 @@
 			Main color
 		</label>
 		<br>
-		<label><input type="checkbox" v-model="settings.disableTips" title="Toggle dark mode for less aggressive background color"> Disable Tips</label>
+		<label>
+		    <input type="checkbox" v-model="settings.disableTips" title="Toggle dark mode for less aggressive background color"> Disable Tips
+		</label>
+		<br>
+		<label>
+		    Hide paths
+		    <select v-model="settings.hidePaths">
+				<option value="">None</option>
+				<option value="programs">Programs</option>
+				<option value="projects">Projects</option>
+				<option value="all">All</option>
+			</select>
+		</label>
 		<br>
 		<hr>
 		<br>
@@ -45,6 +57,7 @@
 				settings: {
 					accent: LocalStorage.get("accent") || "#92e312",
 					darkMode: !!LocalStorage.get("darkMode"),
+					hidePaths: LocalStorage.get("hidePaths") || "",
 					disableTips: !!LocalStorage.get("disableTips"),
 					hideProjects: !!LocalStorage.get("hideProjects"),
 					commandPrefix: LocalStorage.get("commandPrefix") || "",
@@ -56,6 +69,7 @@
 		},
 		watch: {
 			"settings.accent"()        { LocalStorage.set("accent", this.settings.accent) },
+			"settings.hidePaths"()     { LocalStorage.set("hidePaths", this.settings.hidePaths) },
 			"settings.darkMode"()      { this.toggleDarkMode(); },
 			"settings.hideProjects"()  { this.hideProjects();   },
 			"settings.disableTips"()   { LocalStorage.set("disableTips", this.settings.disableTips); },

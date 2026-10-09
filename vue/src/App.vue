@@ -1,10 +1,11 @@
 <template>
-	<div class="main" :class="{ disableTips: !!disableTips }">
+	<div class="main" :class="{ disableTips: !!disableTips, ['hidepaths-'+hidePaths]: true }">
 		<div id="header">
 			<div class="grab">
-				<p style="opacity: 0.3; margin: 0; margin-left: 15px;" class="tip">
+				<span style="opacity: 0.7;"><B style="color: var(--accent);">Godot Manager</B> {{ version }}</span>
+				<span style="opacity: 0.3; margin: 0; margin-left: 15px;" class="tip">
 					<i class="fas fa-info-circle"></i> Hold shift to open folder, either for programs or projects
-				</p>
+				</span>
 			</div>
 			<div id="buttons">
 				<div class="button minimize" @click="() => { action('minimize'); }"></div>
@@ -19,7 +20,7 @@
 						:projects="projects"
 						:programs="programs"
 						:nbAssets="nbAssets"
-						:selectedProgram="selectedProgram" 
+						:selectedProgram="selectedProgram"
 						@openModal="openModal"
 						@updateVar="updateVar"
 					/>
@@ -47,10 +48,12 @@
 	export default {
 		name: "App",
 		data() {
-			return {
+            return {
+                version: "",
 				accentColor: LocalStorage.get("accent") || "#bbd141",
 				disableTips: !!LocalStorage.get("disableTips"),
 				accentColorTransparent: (LocalStorage.get("accent") || "#bbd141") + "42",
+				hidePaths: (LocalStorage.get("hidePaths") || ""),
 				modal: null,
 				maxHeight: "80px",
 				projects: [],
@@ -73,7 +76,8 @@
 			shiftHeld(evt) { this.isShiftHeld = evt.shiftKey; },
 			unshiftHeld(evt) { this.isShiftHeld = false; },
 			setAccent(col) { this.accentColor = col; this.accentColorTransparent = col + '42'; },
-			toggleTips(toggle) { this.disableTips = toggle; }
+            toggleTips(toggle) { this.disableTips = toggle; },
+            toggleHidePaths() { this.hidePaths = (LocalStorage.get("hidePaths") || ""); },
 		},
 		async mounted() {
 			this.updateMaxModalHeight();
@@ -89,9 +93,11 @@
 				this.setDarkMode(true); // Get theme from system's settings
 			}
 
+            this.version = await window._API_.get("/version");
 			LocalStorage.listen("darkMode", this.setDarkMode);
 			LocalStorage.listen("accent", this.setAccent);
 			LocalStorage.listen("disableTips", this.toggleTips);
+			LocalStorage.listen("hidePaths", this.toggleHidePaths);
 			this.hideProjects(!!LocalStorage.get("hideProjects"));
 			LocalStorage.listen("hideProjects", this.hideProjects);
 			document.querySelector("BODY").addEventListener("keydown", this.shiftHeld);
@@ -103,6 +109,7 @@
 			document.querySelector("BODY").removeEventListener("keyup", this.unshiftHeld);
 			LocalStorage.unlisten("darkMode", this.setDarkMode);
 			LocalStorage.unlisten("accent", this.setAccent);
+			LocalStorage.unlisten("hidePaths", this.toggleHidePaths);
 			LocalStorage.unlisten("disableTips", this.toggleTips);
 			LocalStorage.unlisten("hideProjects", this.hideProjects);
 		}
@@ -124,7 +131,7 @@
 		--backgroundTransparent: rgba(245,245,245,0.85);
 		--textColor: #323232;
 		--menu-width: 260px;
-		--borderRadius: 5px;
+		--borderRadius: 12px;
 		/*--border-color: rgba(85,85,85,0.12);*/
 		--border-color: transparent;
 	}
@@ -276,14 +283,16 @@
 		transform: translate(-50%, -250%);
 	}
 
-	/************************** Header **************************/ 
+	/************************** Header **************************/
 	#header {
 		position: fixed;
-		top: 0; left: var(--menu-width); right: 0;
+		top: 0; left: 0; right: 0;
 		z-index: 10;
 		display: flex;
+		padding-left: 12px;
 		height: var(--header-height);
 		line-height: var(--header-height);
+		border-bottom: 1px solid rgba(255,255,255,0.15);
 	}
 	#header .fill {
 		flex: unset;
@@ -400,7 +409,7 @@
 		position: absolute;
 		overflow: auto;
 		bottom: 0;
-		top: 0;
+		top: var(--header-height);
 	}
 	#leftPannel {
 		z-index: 4;
@@ -408,7 +417,6 @@
 		border-right: 1px solid var(--border-color);
 	}
 	#rightPannel {
-		top: var(--header-height);
 		left: var(--menu-width); right: 0;
 	}
 
