@@ -17,8 +17,10 @@
 				@click="(e) => { selectVersion(e, program); }"
 				style="overflow: hidden; text-overflow: ellipsis;"
 			:class="{ active: selectedVersion && (selectedVersion.path === program.path) }">
-				<span>Version: <b>{{ program.tag }}</b></span>
-				<br>
+			    <div style="display: flex; justify-content: space-between;">
+					<span>Version: <b>{{ program.tag }}</b></span>
+					<span class="mono-tag" v-if="program.isMono">C#</span>
+				</div>
 				<span style="white-space: nowrap; opacity: 0.5;" class="isPath"><i class="fas fa-folder"></i> {{ program.execName }}</span>
 			</div>
 		</div>
@@ -74,4 +76,13 @@
 		color: var(--accent);
 	}
 	.hidepaths-all .program .isPath, .hidepaths-programs .program .isPath { display: none; }
+	.mono-tag {
+	    margin-left: 4px;
+		padding: 2px 8px;
+		color: var(--accent);
+		font-weight: bold;
+		border-radius: 12px;
+		margin: -3px 0;
+		border: 1px solid var(--accent);
+	}
 </style>

@@ -2,7 +2,7 @@
 	<div class="main" :class="{ disableTips: !!disableTips, ['hidepaths-'+hidePaths]: true }">
 		<div id="header">
 			<div class="grab">
-				<span style="opacity: 0.7;"><B style="color: var(--accent);">Godot Manager</B> {{ version }}</span>
+				<span style="opacity: 0.7;"><b style="color: var(--accent);">Godot Manager</b> {{ version }}</span>
 				<span style="opacity: 0.3; margin: 0; margin-left: 15px;" class="tip">
 					<i class="fas fa-info-circle"></i> Hold shift to open folder, either for programs or projects
 				</span>
@@ -69,8 +69,8 @@
 			openModal(modalName) { this.modal = modalName; },
 			updateVar(prop, value) { this[ prop ] = value; },
 			updateMaxModalHeight() { this.maxHeight = (document.querySelector("BODY").offsetHeight - 120) + "px"; },
-			async getProjects() { const allprojects = await window._API_.get("/projects"); this.projects = allprojects.projects; this.nbAssets = allprojects.nbAssets; console.log(this.projects); },
-			async getPrograms() { this.programs = await window._API_.get("/programs"); },
+			async getProjects() { const allprojects = await window._API_.get("/projects"); this.projects = allprojects.projects; this.nbAssets = allprojects.nbAssets; },
+            async getPrograms() { this.programs = await window._API_.get("/programs"); console.log({ programs: this.programs }); },
 			setDarkMode(toggle) { document.querySelector("BODY").classList[ toggle ? "add" : "remove" ]("dark"); },
 			hideProjects(toggle) { document.querySelector("BODY").classList[ toggle ? "add" : "remove" ]("hideProjects"); },
 			shiftHeld(evt) { this.isShiftHeld = evt.shiftKey; },

@@ -47,9 +47,9 @@ class ProgramsManager {
 				encoding: 'utf-8',
 			});
 			const firstLine = (helpOutput.output[1] || '').split("\n").shift().replace(/\u001b\[.*?m/g, '');
-
 			if (firstLine.indexOf('Godot Engine v') !== 0) return;
-			const version = firstLine.match(/v([0-9]+\.[0-9]+\.[^\.]+)/)[1].split('.');
+            const version = firstLine.match(/v([0-9]+\.[0-9]+\.[^\.]+)/)[1].split('.');
+            const isMono = !!(firstLine.match(/\.mono\./) || [])[0];
 			const program = {
 				id: "#"+this.#lastID,
 				version: version[0],
@@ -58,7 +58,8 @@ class ProgramsManager {
 				int_v: parseInt([ version[0], version[1] ].join('')),
 				build: version[2],
 				tag: version.join('.'),
-				path_full: execPath,
+                path_full: execPath,
+				isMono: !!isMono,
 				path: execPath.replace(folderPath, "@"),
 				execName: execPath.split(/[\/\/]/).pop()
 			};
