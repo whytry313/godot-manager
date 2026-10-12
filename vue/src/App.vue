@@ -1,5 +1,5 @@
 <template>
-	<div class="main" :class="{ disableTips: !!disableTips, ['hidepaths-'+hidePaths]: true }">
+	<div class="main" :class="{ disableTips: !!disableTips, 'no-window-bar': noWindowBar, ['hidepaths-'+hidePaths]: true }">
 		<div id="header">
 			<div class="grab">
 				<span style="opacity: 0.7;"><b style="color: var(--accent);">Godot Manager</b> {{ version }}</span>
@@ -93,8 +93,12 @@
 				this.setDarkMode(true); // Get theme from system's settings
 			}
 
-            this.version = await window._API_.get("/version");
-			LocalStorage.listen("darkMode", this.setDarkMode);
+            const version = await window._API_.get("/version");
+            const noWindowBar = await window._API_.get("/window-bar");
+            this.version = version;
+            this.noWindowBar = noWindowBar;
+
+            LocalStorage.listen("darkMode", this.setDarkMode);
 			LocalStorage.listen("accent", this.setAccent);
 			LocalStorage.listen("disableTips", this.toggleTips);
 			LocalStorage.listen("hidePaths", this.toggleHidePaths);
@@ -164,6 +168,9 @@
 		overflow: hidden;
 		border-radius: var(--borderRadius);
 		background-color: var(--background);
+	}
+	html, body {
+		background-color: var(--backgroundEnd);
 	}
 	#app {
 		background: linear-gradient(var(--background) 0%, var(--backgroundEnd) 100%);
@@ -447,4 +454,11 @@
 		color: var(--background);
 	}
 	.disableTips .tip { display: none !important; }
+
+	.no-window-bar #header {
+	    display: none;
+	}
+	.no-window-bar.main {
+	    --header-height: 0px;
+	}
 </style>
