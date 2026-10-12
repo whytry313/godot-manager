@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { protocol } = require("electron");
+const { protocol, app } = require("electron");
 const electrolite = require("electrolite");
 const isProd = process.env.NODE_ENV !== "dev";
 const API = require("./server/API/index.js");
@@ -9,8 +9,8 @@ const Programs = require("./server/Scanners/Programs.js");
 let ELECTRON_SRC = path.join(__dirname, "./public/index.html");
 const Log = require("./server/Utils/Log.js");
 const displayCLIHelp = require("./server/Utils/cli-help.js");
-const init = async () => {
 
+const init = async () => {
 
 	protocol.registerSchemesAsPrivileged([
 	  { scheme: 'icon', privileges: { supportFetchAPI: true } }
@@ -68,7 +68,7 @@ const init = async () => {
 	});
 
 
-    electrolite.get("/version", () => process.env.npm_package_version);
+    electrolite.get("/version", () => app.getVersion());
 	win.window.once("ready-to-show", () => { Projects.getFoldersSizes(); });
 	win.on("close", () => win.window.close());
 	win.on("minimize", () => win.window.minimize());
