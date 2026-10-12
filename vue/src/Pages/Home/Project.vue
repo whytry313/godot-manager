@@ -83,6 +83,9 @@
 		background-color: rgba(100,100,100,0.1);
 		border: 1px solid var(--accent);
 	}
+	.project:active {
+		border: 1px solid transparent;
+	}
 	.project.disabled { opacity: 0.5; cursor: default; }
 	.hideProjects .project.disabled { display: none; }
 	.project .project-image {
