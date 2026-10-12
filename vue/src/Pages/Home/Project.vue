@@ -1,39 +1,41 @@
 <template>
-	<div class="project" v-if="project" :class="{ ...(classes || {}) }">
-		<div class="project-image"
-			:class="{ hasIcon: !!project.icon }"
-			:style="{ backgroundImage: project.icon ? `url(icon://${ project.icon })`: 'none' }">
-		</div>
-		<div class="project-details">
-			<p style="margin: 0;">
-				<span class="projectName">
-					{{ project.name }}
-				</span>
-				<span class="info-bubble tag" v-for="tag in project.tags">
-					{{ tag }}
-				</span>
-				<span class="info-bubble plugin" v-if="project.nbPlugins" title="Enabled plugins" @click.stop.prevent="() => { $emit('showProjectAddons', project); }">
-					<i class="fas fa-code-branch"></i> {{ project.nbPlugins }}
-				</span>
-				<span class="info-bubble terminal" title="Open in terminal" @click.stop.prevent="() => { $emit('openInTerminal', project); }">
-					<i class="fas fa-terminal"></i>
-				</span>
-				<div class="sizes" v-if="project.size && project.size.folder > -1" :title="getSizes(project)">
-					{{ size(project.size.folder) }}
-				</div>
-			</p>
-			<p v-if="project.description" class="description-text">
-				{{ project.description }}
-			</p>
-			<div class="folder isPath">
-				<i class="fas fa-folder"></i> {{ project.path }}
-			</div>
-		</div>
-		<div class="project-info">
-			<div class="info-bubble">{{ project.version }}</div>
-			<div class="btn info-bubble openAnyway" v-if="project.isUpgradable">Open with {{ selectedVersion.versionTag }}</div>
-		</div>
-	</div>
+    <div class="project-container">
+    	<div class="project" v-if="project" :class="{ ...(classes || {}) }">
+    		<div class="project-image"
+    			:class="{ hasIcon: !!project.icon }"
+    			:style="{ backgroundImage: project.icon ? `url(icon://${ project.icon })`: 'none' }">
+    		</div>
+    		<div class="project-details">
+    			<p style="margin: 0;">
+    				<span class="projectName">
+    					{{ project.name }}
+    				</span>
+    				<span class="info-bubble tag" v-for="tag in project.tags">
+    					{{ tag }}
+    				</span>
+    				<span class="info-bubble plugin" v-if="project.nbPlugins" title="Enabled plugins" @click.stop.prevent="() => { $emit('showProjectAddons', project); }">
+    					<i class="fas fa-code-branch"></i> {{ project.nbPlugins }}
+    				</span>
+    				<span class="info-bubble terminal" title="Open in terminal" @click.stop.prevent="() => { $emit('openInTerminal', project); }">
+    					<i class="fas fa-terminal"></i>
+    				</span>
+    				<div class="sizes" v-if="project.size && project.size.folder > -1" :title="getSizes(project)">
+    					{{ size(project.size.folder) }}
+    				</div>
+    			</p>
+    			<p v-if="project.description" class="description-text">
+    				{{ project.description }}
+    			</p>
+    			<div class="folder isPath">
+    				<i class="fas fa-folder"></i> {{ project.path }}
+    			</div>
+    		</div>
+    		<div class="project-info">
+    			<div class="info-bubble">{{ project.version }}</div>
+    			<div class="btn info-bubble openAnyway" v-if="project.isUpgradable">Open with {{ selectedVersion.versionTag }}</div>
+    		</div>
+    	</div>
+    </div>
 </template>
 
 <script>
@@ -62,15 +64,24 @@
 </script>
 
 <style scoped>
+    .project-container {
+        display: block;
+    }
 	.project {
+	    margin: 4px;
+		padding: 2px 0;
 		display: flex;
 		cursor: pointer;
 		text-align: left;
 		user-select: none;
 		align-items: center;
+		border-radius: 16px;
+		border: 1px solid transparent;
+		transition: all 0.15s;
 	}
 	.project:hover {
 		background-color: rgba(100,100,100,0.1);
+		border: 1px solid var(--accent);
 	}
 	.project.disabled { opacity: 0.5; cursor: default; }
 	.hideProjects .project.disabled { display: none; }
@@ -82,7 +93,7 @@
 		border-radius: 10px;
 /* 		background-color: var(--accent); */
 		background-color: #f5f5f5;
-		margin-left: 16px;
+		margin-left: 10px;
 		margin-right: 16px;
 		background-repeat: no-repeat;
 		background-position: 50% 50%;
