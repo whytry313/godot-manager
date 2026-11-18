@@ -46,7 +46,7 @@ class ProgramsManager {
 				stdio: 'pipe',
 				encoding: 'utf-8',
 			});
-			const firstLine = (helpOutput.output[1] || '').split("\n").shift().replace(/\u001b\[.*?m/g, '');
+			const firstLine = (helpOutput && helpOutput.output && helpOutput.output[1] || '').split("\n").shift().replace(/\u001b\[.*?m/g, '');
 			if (firstLine.indexOf('Godot Engine v') !== 0) return;
             const version = firstLine.match(/v([0-9]+\.[0-9]+\.[^\.]+)/)[1].split('.');
             const isMono = !!(firstLine.match(/\.mono\./) || [])[0];
