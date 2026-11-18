@@ -3,7 +3,8 @@ module.exports = () => {
 Usage: godot-manager [file.project]
 
 Options:
-    -h, --help    Displays this help
+    -h, --help       Displays this help
+    --native-window  Uses the system's window decorator
 
 Tip:
     Set this program as defaul "Open with..." for .project files,

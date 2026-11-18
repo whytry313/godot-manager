@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { protocol } = require("electron");
+const { protocol, app } = require("electron");
 const electrolite = require("electrolite");
 const isProd = process.env.NODE_ENV !== "dev";
 const API = require("./server/API/index.js");
@@ -9,8 +9,10 @@ const Programs = require("./server/Scanners/Programs.js");
 let ELECTRON_SRC = path.join(__dirname, "./public/index.html");
 const Log = require("./server/Utils/Log.js");
 const displayCLIHelp = require("./server/Utils/cli-help.js");
-const init = async () => {
 
+let NATIVE_WINDOW = false;
+
+const init = async () => {
 
 	protocol.registerSchemesAsPrivileged([
 	  { scheme: 'icon', privileges: { supportFetchAPI: true } }
@@ -47,18 +49,28 @@ const init = async () => {
 
 
 	if (!isProd) await createDevServer();
-	const win = electrolite.createWindow({
+	const windowConfig = {
 		src: ELECTRON_SRC,
 		width: 1080,
-		height: 600,
-		raw: { frame: false, transparent:true }
-	});
+        height: 600,
+        raw: {
+            frame: false,
+            transparent: true
+        }
+    };
+
+    if (NATIVE_WINDOW) {
+        windowConfig.raw.frame = true;
+        windowConfig.raw.transparent = false;
+        windowConfig.raw.autoHideMenuBar = true;
+	}
+
+    const win = electrolite.createWindow(windowConfig);
 
 	protocol.interceptFileProtocol("icon", (request, callback) => {
 		const url = request.url.replace("icon://", '').replace(/\/$/, "");
 		return callback({ path: Projects.hasIcon(url) ? url : null });
 	});
-
 
 	protocol.interceptFileProtocol("res", (request, callback) => {
 		const url = request.url.replace("res://", '').replace(/\/$/, "").split(":");
@@ -67,43 +79,46 @@ const init = async () => {
 		return callback({ path: Projects.getProjectFilePath(project, filepath) });
 	});
 
-
-    electrolite.get("/version", () => process.env.npm_package_version);
-	win.window.once("ready-to-show", () => { Projects.getFoldersSizes(); });
+    electrolite.get("/version", () => app.getVersion());
+    electrolite.get("/window-bar", () => NATIVE_WINDOW);
+    win.window.once("ready-to-show", () => {
+        Projects.getFoldersSizes();
+        win.window.setTitle("Gdoto Manager - " + app.getVersion());
+    });
 	win.on("close", () => win.window.close());
 	win.on("minimize", () => win.window.minimize());
 	win.on("maximize", () => win.window.isMaximized() ? win.window.unmaximize() : win.window.maximize());
-
 
 	Projects.scan();
 	Programs.scan();
 }
 
 
-
 const getFileInArguments = () => {
-    let file = null
+    let file = null;
     if (process.argv.indexOf("-h") > -1 || process.argv.indexOf("--help") > -1) { return displayCLIHelp(); }
 
     Array.from(process.argv).forEach((_arg) => {
-		let filePath = null;
-		let arg = _arg;
-		if (!fs.existsSync(arg)) return;
-		let stat = fs.lstatSync(arg);
-		if (stat.isSymbolicLink()) {
-			arg = fs.readlinkSync(arg);
-			stat = fs.lstatSync(arg);
-			Log("Symbolic link found in arguments:", _arg, " -> ", arg);
-		}
-		if (stat.isFile()) {
-			filePath = arg;
-			Log("File found in arguments:", arg);
-		}
+        if (_arg === "--native-window") { NATIVE_WINDOW = true; return; }
 
-		if (filePath && filePath.indexOf("project.godot") > -1) {
-			file = arg;
-			Log("File set as main project file");
-		}
+        let filePath = null;
+  		let arg = _arg;
+  		if (!fs.existsSync(arg)) return;
+  		let stat = fs.lstatSync(arg);
+  		if (stat.isSymbolicLink()) {
+ 			arg = fs.readlinkSync(arg);
+ 			stat = fs.lstatSync(arg);
+ 			Log("Symbolic link found in arguments:", _arg, " -> ", arg);
+  		}
+  		if (stat.isFile()) {
+ 			filePath = arg;
+ 			Log("File found in arguments:", arg);
+  		}
+
+  		if (filePath && filePath.indexOf("project.godot") > -1) {
+ 			file = arg;
+ 			Log("File set as main project file");
+  		}
 	});
 	return file;
 }

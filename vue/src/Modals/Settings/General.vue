@@ -31,8 +31,9 @@
 			<b style="opacity: 0.5;">__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia</b><br>
 			<br>
 			<div class="text-block">
-				<textarea v-model="settings.commandPrefix"></textarea>
+				<textarea v-model="settings.commandPrefix" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
 			</div>
+			<br>
 			<table>
 				<tbody>
 					<tr v-for="command in commands">
@@ -121,7 +122,7 @@
 		display: block;
 		width: auto;
 		padding: 7px;
-		border: 1px solid var(--textColor);
+		border: 1px solid var(--accent);
 		background-color: var(--background);
 		color: var(--textColor);
 		border-radius: 7px;
@@ -145,6 +146,6 @@
 	}
 	table tr td {
 		padding: 7px;
-		border: 1px solid var(--textColor);
+		border: 1px solid var(--accent);
 	}
 </style>
